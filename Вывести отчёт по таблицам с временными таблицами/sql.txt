@@ -1,0 +1,30 @@
+DECLARE @temp TABLE (f1 NVARCHAR(500), f2 NVARCHAR(500))
+
+INSERT INTO @temp VALUES (' ', ' '), ('Отчёт по категориям', ' ')
+
+INSERT INTO @temp
+SELECT '', '' 
+UNION ALL
+SELECT 'Отчёт по категориям', 'CategoryID' 
+UNION ALL
+SELECT CategoryName, CAST(CategoryID AS VARCHAR) FROM Categories
+UNION ALL
+SELECT '', '' 
+UNION ALL
+SELECT 'Отчёт по товарам', 'ProductID' 
+UNION ALL
+SELECT '', '' 
+UNION ALL
+SELECT ProductName, CAST(ProductID AS VARCHAR) FROM Products 
+UNION ALL
+SELECT '', '' 
+UNION ALL
+SELECT 'Суммарно', ' ' union all
+SELECT '', '' 
+insert into @temp
+SELECT c.CategoryName, COUNT(p.ProductID) AS TotalProducts
+FROM Categories c
+LEFT JOIN Products p ON c.CategoryID = p.CategoryID
+GROUP BY c.CategoryName;
+
+SELECT f1 as 'Название отчёта', f2 as ' ' FROM @temp;
